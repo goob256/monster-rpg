@@ -1,0 +1,13 @@
+AnimationSet file format:
+name
+num animations
+Animation * num animations
+
+Animation format:
+(int)chars in name
+name chars
+(int) num frames
+(int)width
+(int)height
+BITMAP data (1 byte per R,G,B component) intermixed with delays
+	(delays after each frame)

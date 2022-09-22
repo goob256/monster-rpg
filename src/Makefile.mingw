@@ -1,0 +1,64 @@
+CC=g++
+
+ifdef BUILD_EDITOR
+CFLAGS=-g -DEDITOR
+else
+CFLAGS=-g -O2 -DALLEGRO_STATICLINK -static-libgcc -static-libstdc++
+endif
+
+LINKFLAGS=-static-libgcc -static-libstdc++ -mwindows
+
+SRCS=\
+	animation.cpp\
+	area.cpp\
+	battle.cpp\
+	battle_affects.cpp\
+	combatant.cpp\
+	config.cpp\
+	debug.cpp\
+	enemy_combatant.cpp\
+	graphics.cpp\
+	input.cpp\
+	io.cpp\
+	menu.cpp\
+	mode7.cpp\
+	mwidgets.cpp\
+	object.cpp\
+	player.cpp\
+	player_combatant.cpp\
+	script.cpp\
+	sound.cpp\
+	spell.cpp\
+	timer.cpp\
+	util.cpp\
+	xml.cpp
+
+LIBOBJS=$(SRCS:.cpp=.o)
+
+ALLEGROLIBS=-lalleg -luser32 -lgdi32 -lkernel32 -lddraw -ldsound -ldinput -luuid -ldxguid -lwinmm -lole32
+VORBISLIBS=-lvorbisfile -lvorbis -logg
+LIBS=-lfudgefont -lfreetype -ltgui_a4 -llua -llogg $(VORBISLIBS) $(ALLEGROLIBS)
+
+default: monster
+
+monster: $(LIBOBJS) monster.o logos.h
+	g++ $(LINKFLAGS) -o monster icon.res $(LIBOBJS) monster.o $(LIBS)
+
+editor: $(LIBOBJS) editor.o
+	g++ -o meditor $(LIBOBJS) editor.o $(LIBS)
+
+mkanim: $(LIBOBJS) mkanim.o
+	g++ -o mkanim $(LIBOBJS) mkanim.o $(LIBS)
+
+mkanimset: $(LIBOBJS) mkanimset.o
+	g++ -o mkanimset $(LIBOBJS) mkanimset.o $(LIBS)
+
+.cpp.o:
+	$(CC) $(CFLAGS) -c $<
+
+clean:
+	-rm *.o
+	-rm editor
+	-rm monster
+	-rm mkanim
+	-rm mkanimset

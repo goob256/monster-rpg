@@ -1,0 +1,80 @@
+CC=g++
+CCC=gcc
+
+ifdef BUILD_EDITOR
+CFLAGS+=-g -DEDITOR
+else
+CFLAGS+=-g -O2 -I/usr/include/lua5.1 -I../tgui-0.9 -I../fudgefont-1.4-src/src -I/usr/include/freetype2 -I/usr/local/include
+endif
+
+LINKFLAGS+=$(LDFLAGS)
+
+CPP_SRCS=\
+	animation.cpp\
+	area.cpp\
+	battle.cpp\
+	battle_affects.cpp\
+	combatant.cpp\
+	config.cpp\
+	debug.cpp\
+	enemy_combatant.cpp\
+	graphics.cpp\
+	input.cpp\
+	io.cpp\
+	menu.cpp\
+	mode7.cpp\
+	mwidgets.cpp\
+	object.cpp\
+	player.cpp\
+	player_combatant.cpp\
+	script.cpp\
+	sound.cpp\
+	spell.cpp\
+	timer.cpp\
+	util.cpp\
+	xml.cpp\
+
+C_SRCS=\
+	../fudgefont-1.4-src/src/fudgefont.c\
+	../fudgefont-1.4-src/src/kerning.c\
+
+LIBOBJS=$(CPP_SRCS:.cpp=.o)
+LIBOBJS+=$(C_SRCS:.c=.o)
+
+SHARED=0
+ALLEGROLIBS=`allegro-config --libs`
+ifeq ($(SHARED), 1)
+VORBISLIBS=-lvorbisfile -lvorbis -logg
+LIBS=-lfudgefont -lfreetype -lz -L../tgui-0.9 -ltgui -llua5.1 -llogg $(VORBISLIBS) $(ALLEGROLIBS)
+else
+VORBISLIBS=-lvorbisfile -lvorbis -logg
+#LIBS=-rdynamic /usr/lib/x86_64-linux-gnu/libfreetype.a /usr/lib/x86_64-linux-gnu/libpng16.a /usr/lib/x86_64-linux-gnu/libz.a -L../tgui-0.9 -ltgui /usr/local/lib/liblua.a -llogg $(VORBISLIBS) $(ALLEGROLIBS)
+LIBS=-lfreetype -lpng -lz -L../tgui-0.9 -ltgui /usr/local/lib/liblua5.1.a -llogg $(VORBISLIBS) $(ALLEGROLIBS)
+endif
+
+default: monster
+
+monster: $(LIBOBJS) monster.o logos.h
+	g++ $(LINKFLAGS) -o monster $(LIBOBJS) monster.o $(LIBS)
+
+editor: $(LIBOBJS) editor.o
+	g++ -o meditor $(LIBOBJS) editor.o $(LIBS)
+
+mkanim: $(LIBOBJS) mkanim.o
+	g++ -o mkanim $(LIBOBJS) mkanim.o $(LIBS)
+
+mkanimset: $(LIBOBJS) mkanimset.o
+	g++ -o mkanimset $(LIBOBJS) mkanimset.o $(LIBS)
+
+.cpp.o:
+	$(CC) $(CFLAGS) -c $<
+
+.c.o:
+	$(CCC) $(CFLAGS) -c $< -o $(<:.c=.o)
+
+clean:
+	-rm *.o
+	-rm editor
+	-rm monster
+	-rm mkanim
+	-rm mkanimset

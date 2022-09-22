@@ -1,0 +1,29 @@
+FLAGS=-DALLEGRO_STATICLINK
+INCLUDES=.
+
+all: lib examples
+
+lib: tgui.o awidgets.o
+	ar rc libtgui.a tgui.o awidgets.o
+	ranlib libtgui.a
+
+tgui.o: tgui.cpp TGUI/tgui.h
+	g++ $(FLAGS) -I$(INCLUDES) -c tgui.cpp
+
+awidgets.o: awidgets.cpp TGUI/awidgets.h
+	g++ $(FLAGS) -c awidgets.cpp
+
+examples: awexamp
+
+awexamp: libtgui.a awexamp.cpp
+	g++ $(FLAGS) awexamp.cpp -o awexamp.exe -L. -ltgui -lalleg
+
+install:
+	-mkdir $(MINGDIR)/include/TGUI
+	copy /y TGUI/*.* $(MINGDIR)/include/TGUI
+	copy /y libtgui.a $(MINGDIR)/lib
+
+clean:
+	del libtgui.a
+	del *.o
+	del awexamp.exe

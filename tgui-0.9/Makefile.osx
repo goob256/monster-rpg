@@ -1,0 +1,22 @@
+PREFIX=/usr/local
+FLAGS=-iwithsysroot /Developer/SDKs/MacOSX10.6.sdk -arch i386
+INCLUDES=.
+
+all: lib
+
+lib: tgui.o awidgets.o
+	ar rc libtgui.a tgui.o awidgets.o
+	ranlib libtgui.a
+
+tgui.o: tgui.cpp TGUI/tgui.h
+	g++ $(FLAGS) -I$(INCLUDES) -c tgui.cpp
+
+awidgets.o: awidgets.cpp TGUI/awidgets.h
+	g++ $(FLAGS) -c awidgets.cpp
+
+install:
+	cp -r TGUI $(PREFIX)/include
+	cp -f libtgui.a /usr/local/lib
+
+clean:
+	rm -f libtgui.a *.o
