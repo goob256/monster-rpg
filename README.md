@@ -9,7 +9,7 @@ Monster 1 is a "loose prequel" to the [Monster RPG 2](http://www.nooskewl.ca/mon
 
 ## Building
 
-The game can be built for Linux, Mac OSX and Windows systems.
+The game can be built for Linux, Mac OS X and Windows systems.
 
 ### Dependencies
 
