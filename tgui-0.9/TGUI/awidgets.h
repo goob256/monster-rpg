@@ -18,7 +18,7 @@ const int AWGT_OPTION_RIGHT_DOWN_BMP = 7;
 const int AWGT_SLIDER_TAB_BMP = 8;
 const int AWGT_FOCUS_COLOR = 9;
 
-extern void aWgtInit() throw (std::bad_alloc);
+extern void aWgtInit();
 extern int aWgtInterpolateColor(float ratio, int color1, int color2);
 extern int aWgtDarken(int color);
 extern int aWgtHighlight(int color);

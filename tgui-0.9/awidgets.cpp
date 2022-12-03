@@ -36,7 +36,7 @@ static int aWgtFocusColor;
  * This must be called before using any other routines in
  * the Allegro Widgets
  */
-void aWgtInit() throw (std::bad_alloc)
+void aWgtInit()
 {
 	aWgtFont = font;
 	if (!linePatternBmp)
